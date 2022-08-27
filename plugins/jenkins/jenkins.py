@@ -134,3 +134,122 @@ class JENKINS(BotPlugin):
             console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
             output_text = console_output.text
             self._bot.send_simple_reply(msg, output_text, threaded=True)
+
+
+    @botcmd(split_args_with=None)
+    def jenkins_createssl(self, msg, args):
+        """_syntax: /jenkins createssl <root_ip> <domain_name>"""
+        if len(args) < 2 or len(args) > 2:
+            text = "`invalid syntax, _syntax: /jenkins createssl <root_ip> <domain_name>`"
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            return
+
+        root_ip = args[0]
+        domain_name = args[1]
+
+        URL = "http://jenkins.sweb.vn/job/sweb/job/Create_SSL/"
+
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+
+        data = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (root_ip, domain_name)
+
+        response = requests.post(URL+"/build", headers=headers, data=data, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+
+        output_url = URL + "/lastBuild/consoleText"
+
+        if response.status_code == 201:
+            text = "Send trigger build to jenkins success\nGenarating output - please wait ..."
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            time.sleep(50)
+            console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            output_text = console_output.text
+            if re.search("SUCCESS", output_text):
+                self._bot.send_simple_reply(msg, output_text, threaded=True)
+            else:
+                text = "Build fail roi @tritran14 oi!!!"
+                self._bot.send_simple_reply(msg, text, threaded=True)
+            
+
+        else:
+            text = "Send trigger build to jenkins fail\n @tritran14 oi vao check ne` {}!!!".format(response.status_code)
+            self._bot.send_simple_reply(msg, text, threaded=True)
+
+    @botcmd(split_args_with=None)
+    def jenkins_createvhost(self, msg, args):
+        """_syntax: /jenkins createvhost <root_ip> <domain_name>"""
+        if len(args) < 2 or len(args) > 2:
+            text = "`invalid syntax, _syntax: /jenkins createvhost <root_ip> <domain_name>`"
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            return
+
+        root_ip = args[0]
+        domain_name = args[1]
+
+        URL = "http://jenkins.sweb.vn/job/sweb/job/Create_vhost/"
+
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+
+        data = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (root_ip, domain_name)
+
+        response = requests.post(URL+"/build", headers=headers, data=data, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+
+        output_url = URL + "/lastBuild/consoleText"
+
+        if response.status_code == 201:
+            text = "Send trigger build to jenkins success\nGenarating output - please wait ..."
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            time.sleep(60)
+            console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            output_text = console_output.text
+            if re.search("SUCCESS", output_text):
+                self._bot.send_simple_reply(msg, output_text, threaded=True)
+            else:
+                text = "Build fail roi @tritran14 oi!!!"
+                self._bot.send_simple_reply(msg, text, threaded=True)
+            
+
+        else:
+            text = "Send trigger build to jenkins fail\n @tritran14 oi vao check ne` {}!!!".format(response.status_code)
+            self._bot.send_simple_reply(msg, text, threaded=True)
+
+    @botcmd(split_args_with=None)
+    def jenkins_backupweb(self, msg, args):
+        """_syntax: /jenkins backupweb <root_ip> <domain_name>"""
+        if len(args) < 2 or len(args) > 2:
+            text = "`invalid syntax, _syntax: /jenkins backupweb <root_ip> <domain_name>`"
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            return
+
+        root_ip = args[0]
+        domain_name = args[1]
+
+        URL = "http://jenkins.sweb.vn/job/sweb/job/Create_vhost/"
+
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+
+        data = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (root_ip, domain_name)
+
+        response = requests.post(URL+"/build", headers=headers, data=data, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+
+        output_url = URL + "/lastBuild/consoleText"
+
+        if response.status_code == 201:
+            text = "Send trigger build to jenkins success\nGenarating output - please wait ..."
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            time.sleep(60)
+            console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            output_text = console_output.text
+            if re.search("SUCCESS", output_text):
+                self._bot.send_simple_reply(msg, output_text, threaded=True)
+            else:
+                text = "Build fail roi @tritran14 oi!!!"
+                self._bot.send_simple_reply(msg, text, threaded=True)
+        else:
+            text = "Send trigger build to jenkins fail\n @tritran14 oi vao check ne` {}!!!".format(response.status_code)
+            self._bot.send_simple_reply(msg, text, threaded=True)
