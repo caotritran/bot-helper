@@ -294,3 +294,54 @@ class CLOUDFLARE(BotPlugin):
         else:
             text = "`something went wrong\n@tritran14 oi, check nha`"
             self._bot.send_simple_reply(msg, text, threaded=True)
+
+    @botcmd(split_args_with=None)
+    def cloudflare_finddomain_fromip(self, msg, args):
+        """_syntax: /cloudflare finddomain_fromip <ip>"""
+        ip = args[0].strip()
+
+        table = []
+        colum = ["Name"]
+
+        if len(args) != 1:
+            text = "`invalid command, make sure using syntax: /cloudflare finddomain_fromip <ip>`"
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            return
+
+        url = "https://api.cloudflare.com/client/v4/zones?status=active&account.id=5c8b583ad4ca045f1e439a11827c730b&page=1&per_page=700&order=status&direction=desc&match=all"
+
+        headers = {
+            'X-Auth-Email': 'caotritran.14@gmail.com',
+            'X-Auth-Key': '{}'.format(X_Auth_Key),
+            'Content-Type': 'application/json',
+        }
+
+        response = requests.request("GET", url, headers=headers)
+        data = json.loads(response.text)['result']
+
+        #print(len(data))
+        text = "`Start collecting more than 600 domains at your cloudflare\nEstimate about 5 minutes...`"
+        self._bot.send_simple_reply(msg, text, threaded=True)
+
+        for i in range(0, len(data)):
+            zoneid = data[i].get('id')
+            #domain = data[i].get('name')
+            #print(zoneid, domain)
+            url2 = "https://api.cloudflare.com/client/v4/zones/{}/dns_records".format(zoneid)
+            resp = requests.request("GET", url2, headers=headers)
+            data_json = json.loads(resp.text)['result']
+            for y in range(0, len(data_json)):
+                #print(len(data_json))
+                #type = data_json[y].get('type')
+                #content = data_json[y].get('content')
+                #name = data_json[y].get('name')
+                if re.search(data_json[y].get('type'), 'A'):
+                    if data_json[y].get('content') == ip:
+                        #content = data_json[y].get('content')
+                        name = data_json[y].get('name')
+                        table.append([
+                            data_json[y].get('name')
+                        ])
+        text = tabulate(table, headers=colum, tablefmt="github")
+        default_text = "something went wrong @tritran14 oi!!!"    
+        self._bot.send_simple_reply(msg, text or default_text, threaded=True)
