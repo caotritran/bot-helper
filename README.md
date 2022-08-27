@@ -20,7 +20,8 @@ using `config.py.slack` if you want to using bot intergrate with slack.
 - Create file `.env` at current folder and add 2 varibales as below:
 ```
 X_Auth_Key=<API_KEY_CLOUDFLARE>
-ACCOUNT_ID=<ACCOUNT_ID_CLOUDFLARE
+ACCOUNT_ID=<ACCOUNT_ID_CLOUDFLARE>
+JENKINS_API_TOKEN=<CREATE_ON_JENKINS>
 ```
 
 - Run error bot as daemon, and happy coding with modify, custom your code in folder `plugin`.
