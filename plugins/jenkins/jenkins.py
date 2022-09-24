@@ -253,3 +253,81 @@ class JENKINS(BotPlugin):
         else:
             text = "Send trigger build to jenkins fail\n @tritran14 oi vao check ne` {}!!!".format(response.status_code)
             self._bot.send_simple_reply(msg, text, threaded=True)
+
+
+
+    @botcmd(split_args_with=None)
+    def jenkins_banip(self, msg, args):
+        """_syntax: /jenkins banip <vps_ip> <ip_want_to_ban>"""
+        if len(args) != 1:
+            text = "`invalid syntax, _syntax: /jenkins banip <vps_ip> <ip_want_to_ban>`"
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            return
+
+        vps_ip = args[0]
+        ban_ip = args[1]
+
+        URL = "http://jenkins.sweb.vn/job/sweb/job/BanIP/"
+
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+
+        data = 'json={"parameter": [{"name":"VPS_IP", "value":"%s"}, {"name":"BAN_IP", "value":"%s"}]}' % (vps_ip, ban_ip)
+
+        response = requests.post(URL+"/build", headers=headers, data=data, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+
+        output_url = URL + "/lastBuild/consoleText"
+
+        if response.status_code == 201:
+            text = "Send trigger build to jenkins success\nGenarating output - please wait ..."
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            time.sleep(20)
+            console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            output_text = console_output.text
+            if re.search("SUCCESS", output_text):
+                self._bot.send_simple_reply(msg, output_text, threaded=True)
+            else:
+                text = "Build fail roi @tritran14 oi!!!"
+                self._bot.send_simple_reply(msg, text, threaded=True)
+        else:
+            text = "Send trigger build to jenkins fail\n @tritran14 oi vao check ne` {}!!!".format(response.status_code)
+            self._bot.send_simple_reply(msg, text, threaded=True)
+
+    @botcmd(split_args_with=None)
+    def jenkins_unbanip(self, msg, args):
+        """_syntax: /jenkins unbanip <vps_ip> <ip_want_to_unban>"""
+        if len(args) != 1:
+            text = "`invalid syntax, _syntax: /jenkins unbanip <vps_ip> <ip_want_to_unban>`"
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            return
+
+        vps_ip = args[0]
+        unban_ip = args[1]
+
+        URL = "http://jenkins.sweb.vn/job/sweb/job/UnBanIP/"
+
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+
+        data = 'json={"parameter": [{"name":"VPS_IP", "value":"%s"}, {"name":"UNBAN_IP", "value":"%s"}]}' % (vps_ip, unban_ip)
+
+        response = requests.post(URL+"/build", headers=headers, data=data, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+
+        output_url = URL + "/lastBuild/consoleText"
+
+        if response.status_code == 201:
+            text = "Send trigger build to jenkins success\nGenarating output - please wait ..."
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            time.sleep(20)
+            console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            output_text = console_output.text
+            if re.search("SUCCESS", output_text):
+                self._bot.send_simple_reply(msg, output_text, threaded=True)
+            else:
+                text = "Build fail roi @tritran14 oi!!!"
+                self._bot.send_simple_reply(msg, text, threaded=True)
+        else:
+            text = "Send trigger build to jenkins fail\n @tritran14 oi vao check ne` {}!!!".format(response.status_code)
+            self._bot.send_simple_reply(msg, text, threaded=True)
