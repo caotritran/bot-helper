@@ -2,7 +2,7 @@ from ast import arg
 import time
 from errbot import BotPlugin, botcmd
 from sys import exit
-import requests, json, urllib3, os
+import requests, json, urllib3, os, re
 from tabulate import tabulate
 
 from dotenv import load_dotenv
