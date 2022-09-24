@@ -259,7 +259,7 @@ class JENKINS(BotPlugin):
     @botcmd(split_args_with=None)
     def jenkins_banip(self, msg, args):
         """_syntax: /jenkins banip <vps_ip> <ip_want_to_ban>"""
-        if len(args) != 1:
+        if len(args) != 2:
             text = "`invalid syntax, _syntax: /jenkins banip <vps_ip> <ip_want_to_ban>`"
             self._bot.send_simple_reply(msg, text, threaded=True)
             return
@@ -297,7 +297,7 @@ class JENKINS(BotPlugin):
     @botcmd(split_args_with=None)
     def jenkins_unbanip(self, msg, args):
         """_syntax: /jenkins unbanip <vps_ip> <ip_want_to_unban>"""
-        if len(args) != 1:
+        if len(args) != 2:
             text = "`invalid syntax, _syntax: /jenkins unbanip <vps_ip> <ip_want_to_unban>`"
             self._bot.send_simple_reply(msg, text, threaded=True)
             return
