@@ -370,10 +370,10 @@ class JENKINS(BotPlugin):
                     backup_link = line[60:-1]
                     text = "Success backup - download manual here: {} - continue restore ...".format(backup_link)
                     self._bot.send_simple_reply(msg, text, threaded=True)
-                else:
-                    text = "Build fail roi @tritran14 oi!!!"
-                    self._bot.send_simple_reply(msg, text, threaded=True)
-                    return
+        else:
+            text = "Build fail roi @tritran14 oi!!!"
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            return
 
         data_create_vhost = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (dest_ip, domain)
 
