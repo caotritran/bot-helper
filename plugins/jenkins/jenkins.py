@@ -6,7 +6,7 @@ import requests, json, urllib3, os, re
 from tabulate import tabulate
 
 from dotenv import load_dotenv
-from plugins.cloudflare.cloudflare import update_dns_recordA
+from cloudflare import update_dns_recordA
 load_dotenv('.env')
 
 JENKINS_API_TOKEN = os.environ['JENKINS_API_TOKEN']
@@ -373,7 +373,7 @@ class JENKINS(BotPlugin):
                 else:
                     text = "Build fail roi @tritran14 oi!!!"
                     self._bot.send_simple_reply(msg, text, threaded=True)
-                    break
+                    return
 
         data_create_vhost = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (dest_ip, domain)
 
