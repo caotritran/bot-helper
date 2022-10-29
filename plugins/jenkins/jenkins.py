@@ -430,7 +430,7 @@ class JENKINS(BotPlugin):
 
         response = requests.post(backup_url+"/build", headers=headers, data=data_ssl, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
 
-        output_url = restore_url + "/lastBuild/consoleText"
+        output_url = ssl_url + "/lastBuild/consoleText"
         if response.status_code == 201:
             text = "Send trigger issue SSL to jenkins success - please wait ..."
             self._bot.send_simple_reply(msg, text, threaded=True)
