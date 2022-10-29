@@ -361,7 +361,7 @@ class JENKINS(BotPlugin):
         if response.status_code == 201:
             text = "Send trigger backup to jenkins success - please wait ..."
             self._bot.send_simple_reply(msg, text, threaded=True)
-            time.sleep(330)
+            time.sleep(360)
             console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
             output_text = console_output.text
 
@@ -397,13 +397,13 @@ class JENKINS(BotPlugin):
 
         data_restore = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}, {"name":"SOURCE_URL", "value":"%s"}]}' % (dest_ip, domain, backup_link)
 
-        response = requests.post(backup_url+"/build", headers=headers, data=data_restore, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+        response = requests.post(restore_url+"/build", headers=headers, data=data_restore, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
 
         output_url = restore_url + "/lastBuild/consoleText"
         if response.status_code == 201:
             text = "Send trigger restore to jenkins success - please wait ..."
             self._bot.send_simple_reply(msg, text, threaded=True)
-            time.sleep(330)
+            time.sleep(360)
             console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
             output_text = console_output.text
 
