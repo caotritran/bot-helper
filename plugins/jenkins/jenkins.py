@@ -384,7 +384,7 @@ class JENKINS(BotPlugin):
         if response.status_code == 201:
             text = "Creating vhost - please wait ..."
             self._bot.send_simple_reply(msg, text, threaded=True)
-            time.sleep(60)
+            time.sleep(200)
             console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
             output_text = console_output.text
             if re.search("SUCCESS", output_text):
