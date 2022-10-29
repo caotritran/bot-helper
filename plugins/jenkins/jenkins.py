@@ -426,7 +426,7 @@ class JENKINS(BotPlugin):
             return
 
         #SSL
-        data_ssl = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (dest_ip, domain, backup_link)
+        data_ssl = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (dest_ip, domain)
 
         response = requests.post(backup_url+"/build", headers=headers, data=data_ssl, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
 
