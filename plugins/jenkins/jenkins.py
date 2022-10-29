@@ -428,7 +428,7 @@ class JENKINS(BotPlugin):
         #SSL
         data_ssl = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (dest_ip, domain)
 
-        response = requests.post(backup_url+"/build", headers=headers, data=data_ssl, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+        response = requests.post(ssl_url+"/build", headers=headers, data=data_ssl, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
 
         output_url = ssl_url + "/lastBuild/consoleText"
         if response.status_code == 201:
