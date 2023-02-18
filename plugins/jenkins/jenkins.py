@@ -361,7 +361,13 @@ class JENKINS(BotPlugin):
         if response.status_code == 201:
             text = "Send trigger backup to jenkins success - please wait ..."
             self._bot.send_simple_reply(msg, text, threaded=True)
-            time.sleep(400)
+            while True:
+                time.sleep(60)
+                console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+                output_text = console_output.text[-8:-1]
+                if output_text == "SUCCESS":
+                    break
+
             console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
             output_text = console_output.text
 
@@ -384,7 +390,12 @@ class JENKINS(BotPlugin):
         if response.status_code == 201:
             text = "Creating vhost - please wait ..."
             self._bot.send_simple_reply(msg, text, threaded=True)
-            time.sleep(400)
+            while True:
+                time.sleep(60)
+                console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+                output_text = console_output.text[-8:-1]
+                if output_text == "SUCCESS":
+                    break
             console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
             output_text = console_output.text
             if re.search("SUCCESS", output_text):
@@ -403,7 +414,12 @@ class JENKINS(BotPlugin):
         if response.status_code == 201:
             text = "Send trigger restore to jenkins success - please wait ..."
             self._bot.send_simple_reply(msg, text, threaded=True)
-            time.sleep(400)
+            while True:
+                time.sleep(60)
+                console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+                output_text = console_output.text[-8:-1]
+                if output_text == "SUCCESS":
+                    break
             console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
             output_text = console_output.text
 
@@ -434,7 +450,12 @@ class JENKINS(BotPlugin):
         if response.status_code == 201:
             text = "Send trigger issue SSL to jenkins success - please wait ..."
             self._bot.send_simple_reply(msg, text, threaded=True)
-            time.sleep(120)
+            while True:
+                time.sleep(60)
+                console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+                output_text = console_output.text[-8:-1]
+                if output_text == "SUCCESS":
+                    break
             console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
             output_text = console_output.text
 
