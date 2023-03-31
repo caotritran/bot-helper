@@ -36,9 +36,9 @@ def main():
                     ip = socket.gethostbyname(domain)
                     if ip == instance_ip:
             
-                        print("Domain {0} chua boc offshore - IP đang point den {1} - {2}".format(domain, ip, hostname))
+                        print("- Domain {0} chua boc offshore - IP đang point den {1} - {2}".format(domain, ip, hostname))
                 except socket.gaierror:
-                    print("Không thể resolve domain {0}".format(domain))
+                    print("- Không thể resolve domain {0}".format(domain))
 
 
 if __name__ == "__main__":
