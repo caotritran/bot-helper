@@ -478,6 +478,56 @@ class JENKINS(BotPlugin):
                 self._bot.send_simple_reply(msg, text, threaded=True)
                 return
 
+    @botcmd(split_args_with=None)
+    def jenkins_offshore_cloudflare(self, msg, args):
+        """_syntax: /jenkins offshore cloudflare <domain_name> <root_ip> <offshore_ip>"""
+        if len(args) < 3 or len(args) > 3:
+            text = "`invalid syntax, _syntax: /jenkins offshore cloudflare <domain_name> <root_ip> <offshore_ip>`"
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            return
+
+        domain_name = args[0]
+        root_ip = args[1]
+        offshore_ip = args[2]
+
+        URL = "http://jenkins.sweb.vn/job/sweb/job/Offshore_Cloudflare/"
+
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
+
+        data = 'json={"parameter": [{"name":"Domain", "value":"%s"}, {"name":"RootIP", "value":"%s"}, {"name":"HOSTS", "value":"%s"}]}' % (domain_name, root_ip, offshore_ip)
+
+        response = requests.post(URL+"/build", headers=headers, data=data, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+
+        output_url = URL + "/lastBuild/consoleText"
+
+        if response.status_code == 201:
+            text = "Send trigger build to jenkins success\nGenarating output - please wait ..."
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            while True:
+                time.sleep(60)
+                console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+                output_text = console_output.text[-8:-1]
+                if output_text == "SUCCESS":
+                    break
+            output_text = console_output.text
+            
+            if re.search("SUCCESS", output_text):
+                text = "Cover offshore IP with Cloudflare completed!"
+                self._bot.send_simple_reply(msg, text, threaded=True)
+            else:
+                text = "Build fail roi @tritran14 oi!!!"
+                self._bot.send_simple_reply(msg, text, threaded=True)
+                return       
+
+        else:
+            text = "Send trigger build to jenkins fail\n @tritran14 oi vao check ne` !!!"
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            # time.sleep(150)
+            # console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            # output_text = console_output.text
+            self._bot.send_simple_reply(msg, output_text, threaded=True)
         
 
 
