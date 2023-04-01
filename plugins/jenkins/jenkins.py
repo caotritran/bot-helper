@@ -81,18 +81,28 @@ class JENKINS(BotPlugin):
         if response.status_code == 201:
             text = "Send trigger build to jenkins success\nGenarating output - please wait ..."
             self._bot.send_simple_reply(msg, text, threaded=True)
-            time.sleep(150)
-            console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            while True:
+                time.sleep(60)
+                console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+                output_text = console_output.text[-8:-1]
+                if output_text == "SUCCESS":
+                    break
             output_text = console_output.text
-            self._bot.send_simple_reply(msg, output_text, threaded=True)
             
+            if re.search("SUCCESS", output_text):
+                text = "Cover offshore IP completed!"
+                self._bot.send_simple_reply(msg, text, threaded=True)
+            else:
+                text = "Build fail roi @tritran14 oi!!!"
+                self._bot.send_simple_reply(msg, text, threaded=True)
+                return       
 
         else:
             text = "Send trigger build to jenkins fail\n @tritran14 oi vao check ne` !!!"
             self._bot.send_simple_reply(msg, text, threaded=True)
-            time.sleep(150)
-            console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
-            output_text = console_output.text
+            # time.sleep(150)
+            # console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            # output_text = console_output.text
             self._bot.send_simple_reply(msg, output_text, threaded=True)
 
 
