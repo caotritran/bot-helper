@@ -24,13 +24,13 @@ class RCLONE(BotPlugin):
             text = "`invalid syntax, _syntax: /rclone find backup <domain_name>`"
             self._bot.send_simple_reply(msg, text, threaded=True)
             return
+        text = "Waiting search all onedrive..."
+        self._bot.send_simple_reply(msg, text, threaded=True)
+        
         domain_name = args[0]
         plugin_path = os.path.dirname(os.path.realpath(__file__))
         other_file_path = os.path.join(plugin_path, "rclone_check_backup.sh")
         result = subprocess.run(['/usr/bin/bash', other_file_path, domain_name], capture_output=True, text=True)
-
-        text = "Waiting search all onedrive..."
-        self._bot.send_simple_reply(msg, text, threaded=True)
 
         while True:
             if result.stdout:
