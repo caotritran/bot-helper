@@ -26,7 +26,7 @@ class RCLONE(BotPlugin):
             return
         text = "Waiting search all onedrive..."
         self._bot.send_simple_reply(msg, text, threaded=True)
-        
+
         domain_name = args[0]
         plugin_path = os.path.dirname(os.path.realpath(__file__))
         other_file_path = os.path.join(plugin_path, "rclone_check_backup.sh")
@@ -37,6 +37,6 @@ class RCLONE(BotPlugin):
                 text = result.stdout
                 break
             time.sleep(20)
-
+        text = tabulate(text, tablefmt="pretty")
         self._bot.send_simple_reply(msg, text, threaded=True)
     
