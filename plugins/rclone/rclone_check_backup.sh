@@ -10,10 +10,10 @@ fi
 
 custom_domain=$last
 
-for i in `rclone listremotes`; do
-    rclone ls $i | grep $custom_domain > /dev/null 2>&1
+for i in `rclone listremotes --config /opt/rclone.conf`; do
+    rclone ls $i --config /opt/rclone.conf | grep $custom_domain > /dev/null 2>&1
     if [[ $? -eq 0 ]]; then
-        rclone ls $i | grep $custom_domain
+        rclone ls $i --config /opt/rclone.conf | grep $custom_domain
         echo "files backup exist at remote *** $i ***"
     fi
 done

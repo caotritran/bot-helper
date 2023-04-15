@@ -27,10 +27,16 @@ class RCLONE(BotPlugin):
         domain_name = args[0]
         plugin_path = os.path.dirname(os.path.realpath(__file__))
         other_file_path = os.path.join(plugin_path, "rclone_check_backup.sh")
-        output = subprocess.check_output(["/usr/bin/bash", other_file_path, domain_name]).decode("utf-8")
+        result = subprocess.run(['/usr/bin/bash', other_file_path, domain_name], capture_output=True, text=True)
 
         text = "Waiting search all onedrive..."
         self._bot.send_simple_reply(msg, text, threaded=True)
-        self._bot.send_simple_reply(msg, output, threaded=True)
 
+        while True:
+            if result.stdout:
+                text = result.stdout
+                break
+            time.sleep(20)
+
+        self._bot.send_simple_reply(msg, text, threaded=True)
     
