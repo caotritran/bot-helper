@@ -37,6 +37,5 @@ class RCLONE(BotPlugin):
                 text = result.stdout
                 break
             time.sleep(20)
-        text = tabulate(text, tablefmt="pretty")
         self._bot.send_simple_reply(msg, text, threaded=True)
     
