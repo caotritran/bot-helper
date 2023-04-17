@@ -14,6 +14,7 @@ for i in `rclone listremotes --config /opt/rclone.conf`; do
     rclone ls $i --config /opt/rclone.conf | grep $custom_domain > /dev/null 2>&1
     if [[ $? -eq 0 ]]; then
         rclone ls $i --config /opt/rclone.conf | grep $custom_domain
-        echo "files backup exist at remote *** $i ***"
+        echo "files backup exist at remote **$i**"
+        echo "==================================="
     fi
 done
