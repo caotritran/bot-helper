@@ -8,14 +8,57 @@ list_instance_ips = {   'TDA33': '18.143.11.232',
                         'TDA37': '52.221.41.54',
                         'TDA38': '13.214.249.149',
                         'TDA39': '18.142.210.142',
-                        'TDA40': '3.1.160.39',
-                        
+                        'TDA40': '3.1.160.39',                        
                     }
 
 def main():
     
     USERNAME="deploy"
-    REMOTE_SSH_COMMAND="find /etc/nginx/conf.d/ -type f -name '*.conf' -print0 | xargs -0 egrep '^(\s|\t)*server_name' | sed -r 's/(.*server_name\s*|;)//g' | tr -s ' ' '\n' | sort | uniq | sed '/^www/d' | grep -Ev '\_|\#|\by|\Certbot|\managed|tda|TDA'"
+    REMOTE_SSH_COMMAND="find /etc/nginx/conf.d/ -type f -name '*.conf' -print0 | xargs -0 egrep '^(\s|\t)*server_name' | sed -r 's/(.*server_name\s*|;)//g' | tr -s ' ' '\n' | sort | uniq | sed '/^www/d' | grep -Ev '\_|\#|\by|\Certbot|\managed|tda|TDA|kaiolaheadwear.shop|funnyfisher.shop \
+    |piperlaneclothing.shop \
+    |daisycouture.shop \
+    |magalifashion.shop \
+    |fussyfeline.shop \
+    |kaiolaheadwear.store \
+    |hollihopscloset.shop \
+    |rebelfashionclothing.shop \
+    |hutweltbazaar.store \
+    |luxolines.shop \
+    |feelclothing.shop \
+    |legluxe.shop \
+    |leggingflower.shop \
+    |plushestoy.shop \
+    |simpleconcept.shop \
+    |jesmee.shop \
+    |daintybowdelight.shop \
+    |daintybowbliss.shop \
+    |sweetdaintybow.shop \
+    |bowtiquekids.com \
+    |littlebowpeep.shop \
+    |bowtifulbows.shop \
+    |bowtastickids.shop \
+    |petitebows.shop \
+    |babybowco.shop \
+    |tinytiesbows.shop \
+    |sweetiebows.shop \
+    |bowsandbeads.shop \
+    |bowtifullyyour.shop \
+    |little-sprouts.store \
+    |happyfeetkids.shop \
+    |tinytreasureskid.store \
+    |minimeaccessories.shop \
+    |littleadventurers.shop \
+    |smalladventures.shop \
+    |kiddiekingdom.store \
+    |kidzkottage.shop \
+    |lullabylane.store \
+    |petitepals.store \
+    |mocblocks.com \
+    |chatterton.store \
+    |devondelight.store \
+    |amberdays.shop \
+    |zilitoys.shop \
+    |potterybarn.shop'"
     OUTPUT_FILE = "output.txt"
     for hostname, instance_ip in list_instance_ips.items():
         REMOTE_SERVER_IP=instance_ip
