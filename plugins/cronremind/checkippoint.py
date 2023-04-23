@@ -1,4 +1,4 @@
-import re
+import re, os
 import paramiko, socket
 
 list_instance_ips = {   'TDA33': '18.143.11.232',
@@ -65,7 +65,8 @@ def main():
 
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        private_key_path = './id_rsa_deploy'
+        private_key_path = '/home/tritran/.ssh/deploy_rsa.pem'
+        #private_key_path = './id_rsa_deploy'
         private_key = paramiko.RSAKey.from_private_key_file(private_key_path)
         client.connect(hostname='{}'.format(REMOTE_SERVER_IP), username='{}'.format(USERNAME), pkey=private_key)
         stdin, stdout, stderr = client.exec_command('{}'.format(REMOTE_SSH_COMMAND))
@@ -84,7 +85,9 @@ def main():
                         print("- Domain {0} chua boc offshore - IP đang point den {1} - {2}".format(domain, ip, hostname))
                 except socket.gaierror:
                     print("- Không thể resolve domain {0}".format(domain))
+                    
 
 
 if __name__ == "__main__":
     main()
+    os.remove("output.txt")
