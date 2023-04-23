@@ -65,8 +65,8 @@ def main():
 
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        private_key_path = '/home/tritran/.ssh/deploy_rsa.pem'
-        #private_key_path = './id_rsa_deploy'
+        #private_key_path = '/home/tritran/.ssh/deploy_rsa.pem'
+        private_key_path = './id_rsa_deploy'
         private_key = paramiko.RSAKey.from_private_key_file(private_key_path)
         client.connect(hostname='{}'.format(REMOTE_SERVER_IP), username='{}'.format(USERNAME), pkey=private_key)
         stdin, stdout, stderr = client.exec_command('{}'.format(REMOTE_SSH_COMMAND))
