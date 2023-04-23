@@ -556,6 +556,9 @@ class JENKINS(BotPlugin):
             self._bot.send_simple_reply(msg, text, threaded=True)
             return
 
+        text = "Waiting search all jobs in Jenkins..."
+        self._bot.send_simple_reply(msg, text, threaded=True)
+
         root_ip = args[0]
         plugin_path = os.path.dirname(os.path.realpath(__file__))
         other_file_path = os.path.join(plugin_path, "jenkins_find_domain_from_ip.py")
