@@ -9,6 +9,8 @@ if [ ${#last} > 12 ]; then
 fi
 
 custom_domain=$last
+found=false
+
 
 for i in `rclone listremotes --config /opt/rclone.conf`; do
     rclone ls $i --config /opt/rclone.conf | grep $custom_domain > /dev/null 2>&1
@@ -16,5 +18,11 @@ for i in `rclone listremotes --config /opt/rclone.conf`; do
         rclone ls $i --config /opt/rclone.conf | grep $custom_domain
         echo "files backup exist at remote **$i**"
         echo "==================================="
+        found=true
     fi
 done
+
+if [ "$found" = false ]; then
+    echo "Not found: Files backup does not exist for domain $custom_domain"
+fi
+

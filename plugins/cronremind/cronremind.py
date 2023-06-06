@@ -8,8 +8,8 @@ class ErrcronDemo(CrontabMixin, BotPlugin):
     Remind task daily
     """
     CRONTAB = [
-        '0 8 * * * .remind_daily @pikabot',
-        '10 8 * * 6 .remind_weekly @pikabot',
+        #'0 8 * * * .remind_daily @pikabot',
+        #'10 8 * * 6 .remind_weekly @pikabot',
         '0 19 * * * .remind_daily_ippoint @pikabot',
     ]
 
