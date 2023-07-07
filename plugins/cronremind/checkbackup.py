@@ -1,22 +1,45 @@
-import re, os
-import paramiko, socket
+import re
+import os
+import paramiko
+import socket
 
-list_instance_ips = {   'SWEB-42': '94.237.79.22',
-                        'SWEB-44': '144.217.86.73',
-                        'SWEB-36': '178.238.226.42',
-                        'SWEB-37': '178.238.226.43',
-                        'TDA-50': '185.207.250.94',
-                        'TDA-51': '130.185.118.54',
-                        'TDA-dedi': '209.126.6.116',
-                        'TDA-52': '213.136.92.122',
-                    }
+list_instance_ips = {
+    'SWEB-42': '94.237.79.22',
+    'SWEB-44': '144.217.86.73',
+    'SWEB-36': '178.238.226.42',
+    'SWEB-37': '178.238.226.43',
+    'TDA-50': '185.207.250.94',
+    'TDA-51': '130.185.118.54',
+    'TDA-dedi': '209.126.6.116',
+    'TDA-52': '213.136.92.122',
+}
+
+
+
+def check_telnet(ip):
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(3)
+        result = sock.connect_ex((ip, 22))
+        sock.close()
+        return result == 0
+    except Exception:
+        return False
 
 def main():
-    
-    USERNAME="deploy"
-    REMOTE_SSH_COMMAND="sudo cat /var/log/backup_bin.log"
+    USERNAME = "deploy"
+    REMOTE_SSH_COMMAND = "sudo cat /var/log/backup_bin.log"
     OUTPUT_FILE = "output.txt"
+    new_instance_ips = {}
+
     for hostname, instance_ip in list_instance_ips.items():
+        if check_telnet(instance_ip):
+            new_instance_ips[hostname] = instance_ip
+        else:
+            print(f"Telnet connection to {instance_ip} failed. Skipping {hostname}...")
+            continue
+    print(new_instance_ips)
+    for hostname, instance_ip in new_instance_ips.items():
         try:
             REMOTE_SERVER_IP=instance_ip
 
@@ -63,9 +86,6 @@ def main():
             print(f"Unable to establish SSH connection with {hostname}: {str(ssh_exc)}")
         except Exception as e:
             print(f"An error occurred while connecting to {hostname}: {str(e)}")
-        
-
-
 
 if __name__ == "__main__":
     main()
