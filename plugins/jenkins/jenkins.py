@@ -375,9 +375,10 @@ class JENKINS(BotPlugin):
         domain = args[2]
         backup_url = "http://jenkins.sweb.vn/job/sweb/job/Backup_website/"
         create_vhost_url = "http://jenkins.sweb.vn/job/sweb/job/Create_vhost/"
+        create_vhost_bedrock_url = "http://jenkins.sweb.vn/job/sweb/job/Bedrock_Multi_Vhost/"
         restore_url = "http://jenkins.sweb.vn/job/sweb/job/Restore_website/"
         ssl_url = "http://jenkins.sweb.vn/job/sweb/job/Create_SSL/"
-
+        
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
         }
@@ -405,35 +406,66 @@ class JENKINS(BotPlugin):
                     backup_link = line[60:-1]
                     text = "Success backup - download manual here: {} - continue restore ...".format(backup_link)
                     self._bot.send_simple_reply(msg, text, threaded=True)
+                    parts = backup_link.split('/')
+                    a = parts[-1]
+                    if "bedrock" in a:
+                        check_bedrock = "true"
+                    check_bedrock = "false"
+
         else:
             text = "Build fail roi @tritran14 oi!!!"
             self._bot.send_simple_reply(msg, text, threaded=True)
             return
+        
+        if check_bedrock == "false":
+            data_create_vhost = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (dest_ip, domain)
 
-        data_create_vhost = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (dest_ip, domain)
+            response = requests.post(create_vhost_url+"/build", headers=headers, data=data_create_vhost, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
 
-        response = requests.post(create_vhost_url+"/build", headers=headers, data=data_create_vhost, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            output_url = create_vhost_url + "/lastBuild/consoleText"
 
-        output_url = create_vhost_url + "/lastBuild/consoleText"
-
-        if response.status_code == 201:
-            text = "Creating vhost - please wait ..."
-            self._bot.send_simple_reply(msg, text, threaded=True)
-            while True:
-                time.sleep(60)
+            if response.status_code == 201:
+                text = "Creating vhost - please wait ..."
+                self._bot.send_simple_reply(msg, text, threaded=True)
+                while True:
+                    time.sleep(60)
+                    console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+                    output_text = console_output.text[-8:-1]
+                    if output_text == "SUCCESS":
+                        break
                 console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
-                output_text = console_output.text[-8:-1]
-                if output_text == "SUCCESS":
-                    break
-            console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
-            output_text = console_output.text
-            if re.search("SUCCESS", output_text):
-                text = "Create vhost completed - continue restore website ..."
+                output_text = console_output.text
+                if re.search("SUCCESS", output_text):
+                    text = "Create vhost completed - continue restore website ..."
+                    self._bot.send_simple_reply(msg, text, threaded=True)
+                else:
+                    text = "Build fail roi @tritran14 oi!!!"
+                    self._bot.send_simple_reply(msg, text, threaded=True)
+                    return
+        else:
+            data_create_vhost_bedrock = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"DOMAINS", "value":"%s"}, {"name":"TEMPLATE", "value":"template01"}]}' % (dest_ip, domain)
+
+            response = requests.post(create_vhost_bedrock_url+"/build", headers=headers, data=data_create_vhost_bedrock, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            output_url = data_create_vhost_bedrock + "/lastBuild/consoleText"
+
+            if response.status_code == 201:
+                text = "Creating vhost bedrock - please wait ..."
                 self._bot.send_simple_reply(msg, text, threaded=True)
-            else:
-                text = "Build fail roi @tritran14 oi!!!"
-                self._bot.send_simple_reply(msg, text, threaded=True)
-                return
+                while True:
+                    time.sleep(60)
+                    console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+                    output_text = console_output.text[-8:-1]
+                    if output_text == "SUCCESS":
+                        break
+                console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+                output_text = console_output.text
+                if re.search("SUCCESS", output_text):
+                    text = "Create vhost bedrock completed - continue restore website ..."
+                    self._bot.send_simple_reply(msg, text, threaded=True)
+                else:
+                    text = "Build fail roi @tritran14 oi!!!"
+                    self._bot.send_simple_reply(msg, text, threaded=True)
+                    return
 
         data_restore = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}, {"name":"SOURCE_URL", "value":"%s"}]}' % (dest_ip, domain, backup_link)
 
@@ -490,7 +522,7 @@ class JENKINS(BotPlugin):
 
             
             if re.search("SUCCESS", output_text):
-                text = "Create SSL completed - restore step completed!"
+                text = "Create SSL completed - restore {} step completed!".format(domain)
                 self._bot.send_simple_reply(msg, text, threaded=True)
             else:
                 text = "Build fail roi @tritran14 oi!!!"
