@@ -416,9 +416,7 @@ class JENKINS(BotPlugin):
             text = "Build fail roi @tritran14 oi!!!"
             self._bot.send_simple_reply(msg, text, threaded=True)
             return
-        
-        self._bot.send_simple_reply(msg, "result check_bedrock {}".format(check_bedrock), threaded=True)
-        
+                
         if check_bedrock == "false":
             data_create_vhost = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (dest_ip, domain)
 
@@ -448,7 +446,7 @@ class JENKINS(BotPlugin):
             data_create_vhost_bedrock = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"DOMAINS", "value":"%s"}, {"name":"TEMPLATE", "value":"template01"}]}' % (dest_ip, domain)
 
             response = requests.post(create_vhost_bedrock_url+"/build", headers=headers, data=data_create_vhost_bedrock, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
-            output_url = data_create_vhost_bedrock + "/lastBuild/consoleText"
+            output_url = create_vhost_bedrock_url + "/lastBuild/consoleText"
 
             if response.status_code == 201:
                 text = "Creating vhost bedrock - please wait ..."
