@@ -378,7 +378,8 @@ class JENKINS(BotPlugin):
         create_vhost_bedrock_url = "http://jenkins.sweb.vn/job/sweb/job/Bedrock_Multi_Vhost/"
         restore_url = "http://jenkins.sweb.vn/job/sweb/job/Restore_website/"
         ssl_url = "http://jenkins.sweb.vn/job/sweb/job/Create_SSL/"
-        
+        check_bedrock = "false"
+
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
         }
@@ -410,12 +411,13 @@ class JENKINS(BotPlugin):
                     a = parts[-1]
                     if "bedrock" in a:
                         check_bedrock = "true"
-                    check_bedrock = "false"
 
         else:
             text = "Build fail roi @tritran14 oi!!!"
             self._bot.send_simple_reply(msg, text, threaded=True)
             return
+        
+        self._bot.send_simple_reply(msg, "result check_bedrock {}".format(check_bedrock), threaded=True)
         
         if check_bedrock == "false":
             data_create_vhost = 'json={"parameter": [{"name":"HOSTS", "value":"%s"}, {"name":"Domain", "value":"%s"}]}' % (dest_ip, domain)
