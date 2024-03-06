@@ -52,12 +52,13 @@ def get_sub_recordid(subdomain, domain):
 
     response = requests.get('https://api.cloudflare.com/client/v4/zones', params=params, headers=headers)
     data = response.json()
-    if data['success']:
+    if data['success'] and data['result']:
         zoneid = data['result'][0]['id']
         return zoneid
     else:
-        print("Failed to retrieve Zone ID.")
+        print(f"No zone found for {subdomain}.{domain}.")
         return None
+
 
 def get_dns_recordid(domain):
     zoneid = get_zoneid(domain)
