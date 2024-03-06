@@ -32,6 +32,33 @@ def get_zoneid(domain):
     zoneid = data['result'][0].get('id')
     return zoneid
 
+def get_sub_recordid(subdomain, domain):
+    headers = {
+        'X-Auth-Email': 'caotritran.14@gmail.com',
+        'X-Auth-Key': '{}'.format(X_Auth_Key),
+        'Content-Type': 'application/json',
+    }
+
+    params = {
+        'name': '{}.{}'.format(subdomain, domain),
+        'status': 'active',
+        'account.id': '{}'.format(ACCOUNT_ID),
+        'page': '1',
+        'per_page': '20',
+        'order': 'status',
+        'direction': 'desc',
+        'match': 'all',
+    }
+
+    response = requests.get('https://api.cloudflare.com/client/v4/zones', params=params, headers=headers)
+    data = response.json()
+    if data['success']:
+        zoneid = data['result'][0]['id']
+        return zoneid
+    else:
+        print("Failed to retrieve Zone ID.")
+        return None
+
 def get_dns_recordid(domain):
     zoneid = get_zoneid(domain)
 
@@ -117,7 +144,7 @@ def create_subdomain(subname, domain, ip):
 
 def update_subdomain(subname, domain, ip):
     zoneid = get_zoneid(domain)
-    dns_recordid = get_dns_recordid(domain)
+    dns_recordid = get_sub_recordid(subname, domain)
     headers = {
         'X-Auth-Email': 'caotritran.14@gmail.com',
         'X-Auth-Key': '{}'.format(X_Auth_Key),
