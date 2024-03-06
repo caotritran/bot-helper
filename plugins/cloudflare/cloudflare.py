@@ -126,7 +126,7 @@ def update_subdomain(subname, domain, ip):
 
     json_data = {
         'type': 'A',
-        'name': '{}'.format(subname),
+        'name': '{0}.{1}'.format(subname,domain),
         'content': '{}'.format(ip),
         'ttl': 1,
         'proxied': False,
