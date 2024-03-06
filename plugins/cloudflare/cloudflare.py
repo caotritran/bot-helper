@@ -176,8 +176,8 @@ def create_subdomain(subname, domain, ip):
     return response
 
 def update_subdomain(subname, domain, ip):
-    zoneid = get_sub_zoneid(subname, domain)
-    dns_recordid = get_sub_recordid(subname, domain)
+    zoneid = get_zoneid(domain)
+    dns_recordid = get_dns_recordid(domain)
     headers = {
         'X-Auth-Email': 'caotritran.14@gmail.com',
         'X-Auth-Key': '{}'.format(X_Auth_Key),
@@ -190,7 +190,7 @@ def update_subdomain(subname, domain, ip):
         'content': '{}'.format(ip),
         'ttl': 1,
         'proxied': False,
-}
+    }
 
     response = requests.put('https://api.cloudflare.com/client/v4/zones/{0}/dns_records/{1}'.format(zoneid, dns_recordid), headers=headers, json=json_data)
     return response
