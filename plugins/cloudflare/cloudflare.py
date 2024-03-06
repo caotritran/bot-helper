@@ -61,7 +61,7 @@ def get_sub_zoneid(subdomain, domain):
 
 
 def get_sub_recordid(subdomain, domain):
-    zoneid = get_sub_zoneid(subdomain, domain)
+    zoneid = get_zoneid(domain)
     if not zoneid:
         return None
 
@@ -177,7 +177,7 @@ def create_subdomain(subname, domain, ip):
 
 def update_subdomain(subname, domain, ip):
     zoneid = get_zoneid(domain)
-    dns_recordid = get_dns_recordid(domain)
+    dns_recordid = get_sub_recordid(subname, domain)
     headers = {
         'X-Auth-Email': 'caotritran.14@gmail.com',
         'X-Auth-Key': '{}'.format(X_Auth_Key),
