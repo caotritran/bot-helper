@@ -61,6 +61,10 @@ def get_sub_zoneid(subdomain, domain):
 
 
 def get_sub_recordid(subdomain, domain):
+    zoneid = get_sub_zoneid(subdomain, domain)
+    if not zoneid:
+        return None
+
     headers = {
         'X-Auth-Email': 'caotritran.14@gmail.com',
         'X-Auth-Key': '{}'.format(X_Auth_Key),
@@ -70,22 +74,22 @@ def get_sub_recordid(subdomain, domain):
     params = {
         'name': '{}.{}'.format(subdomain, domain),
         'status': 'active',
-        'account.id': '{}'.format(ACCOUNT_ID),
+        'zone_id': zoneid,  # Use the obtained zone ID
         'page': '1',
         'per_page': '20',
-        'order': 'status',
+        'order': 'type',
         'direction': 'desc',
-        'match': 'all',
     }
 
-    response = requests.get('https://api.cloudflare.com/client/v4/zones', params=params, headers=headers)
+    response = requests.get('https://api.cloudflare.com/client/v4/zones/{}/dns_records'.format(zoneid), params=params, headers=headers)
     data = response.json()
     if data['success'] and data['result']:
-        zoneid = data['result'][0]['id']
-        return zoneid
+        recordid = data['result'][0]['id']
+        return recordid
     else:
-        print(f"No zone found for {subdomain}.{domain}.")
+        print(f"No DNS record found for {subdomain}.{domain}.")
         return None
+
 
 
 def get_dns_recordid(domain):
