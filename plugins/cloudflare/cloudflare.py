@@ -172,7 +172,7 @@ def create_subdomain(subname, domain, ip):
     return response
 
 def update_subdomain(subname, domain, ip):
-    get_sub_zoneid = get_zoneid(subname,domain)
+    zoneid = get_sub_zoneid(subname, domain)
     dns_recordid = get_sub_recordid(subname, domain)
     headers = {
         'X-Auth-Email': 'caotritran.14@gmail.com',
