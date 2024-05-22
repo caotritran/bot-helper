@@ -378,6 +378,7 @@ class JENKINS(BotPlugin):
         create_vhost_bedrock_url = "http://jenkins.sweb.vn/job/sweb/job/Bedrock_Multi_Vhost/"
         restore_url = "http://jenkins.sweb.vn/job/sweb/job/Restore_website/"
         ssl_url = "http://jenkins.sweb.vn/job/sweb/job/Create_SSL/"
+        nginx_removal_url = "http://jenkins.sweb.vn/job/sweb/job/Nginx_Remove_Config/"
         check_bedrock = "false"
 
         headers = {
@@ -522,7 +523,34 @@ class JENKINS(BotPlugin):
 
             
             if re.search("SUCCESS", output_text):
-                text = "Create SSL completed - restore {} step completed!".format(domain)
+                text = "Create SSL completed - restore {} step completed - removing config nginx on old VPS ...".format(domain)
+                self._bot.send_simple_reply(msg, text, threaded=True)
+            else:
+                text = "Build fail roi @tritran14 oi!!!"
+                self._bot.send_simple_reply(msg, text, threaded=True)
+                return
+        
+        # Nginx config removal
+        data_nginx = 'json={"parameter": [{"name":"HOST", "value":"%s"}, {"name":"DOMAIN", "value":"%s"}]}' % (source_ip, domain)
+
+        response = requests.post(nginx_removal_url+"/build", headers=headers, data=data_nginx, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+
+        output_url = nginx_removal_url + "/lastBuild/consoleText"
+        if response.status_code == 201:
+            text = "Send trigger remove nginx config to jenkins success - please wait ..."
+            self._bot.send_simple_reply(msg, text, threaded=True)
+            while True:
+                time.sleep(60)
+                console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+                output_text = console_output.text[-8:-1]
+                if output_text == "SUCCESS":
+                    break
+            console_output = requests.get(output_url, auth=('admin', '{}'.format(JENKINS_API_TOKEN)))
+            output_text = console_output.text
+
+            
+            if re.search("SUCCESS", output_text):
+                text = "Remove nginx config completed - all done".format(domain)
                 self._bot.send_simple_reply(msg, text, threaded=True)
             else:
                 text = "Build fail roi @tritran14 oi!!!"
